@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rally project setup: greenfield-rally-rails-run1</title>
+  
+  <style>
+    :root {
+      --primary-color: #E2624B;
+      --primary-dark: #C51616;
+      --secondary-color: #6b7280;
+      --light-grey: #eee;
+      --secondary-button-background: #fdf4ec;
+      --light-orange: #F2B27A;
+      --dark-orange: #e17055;
+      --background-color: #fffdf0;
+      --surface-color: #ffffff;
+      --text-color: #393D4E;
+      --border-color: #e6e4d5;
+      --error-color: #ef4444;
+      --success-color: #10b981;
+      --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .hidden { display: none !important; }
+
+    /* Header */
+    .site-header {
+      background: var(--surface-color);
+      box-shadow: var(--box-shadow);
+      padding: 0 1rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+    .site-header .header-inner {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .site-header img {
+      height: 32px;
+      width: auto;
+    }
+    .site-header .header-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+
+    /* Main content */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .container {
+      background: var(--surface-color);
+      border-radius: 0.5rem;
+      box-shadow: var(--box-shadow);
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    .page-intro {
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+    }
+    /* Card sub-sections (Original question, Why it matters, Why the AI recommended this) */
+    .card-section {
+      margin-bottom: 1rem;
+    }
+    .card-section-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
+      text-transform: none;
+    }
+    .card-section-body {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      white-space: pre-wrap;
+    }
+
+    /* Radio groups */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .radio-option-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .radio-option input[type="radio"] {
+      margin: 0;
+      accent-color: var(--primary-color);
+    }
+    .radio-option label {
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+    .radio-option-consequence {
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+      margin-left: 1.75rem;
+      white-space: pre-wrap;
+    }
+    .ai-recommendation {
+      color: var(--primary-color);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Codebase evidence disclosure */
+    .codebase-evidence {
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      background: #fafafa;
+    }
+    .codebase-evidence summary {
+      cursor: pointer;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      user-select: none;
+    }
+    .codebase-evidence summary:hover {
+      color: var(--text-color);
+    }
+    .codebase-evidence-body {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.875rem;
+      color: #374151;
+      white-space: pre-wrap;
+    }
+
+    /* Comment textareas */
+    .comment-area {
+      margin-top: 0.75rem;
+    }
+    .comment-area label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+    .comment-area textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+      background-color: #fff;
+    }
+    .comment-area textarea.validation-error {
+      border-color: var(--error-color);
+      outline-color: var(--error-color);
+    }
+    .validation-msg {
+      color: var(--error-color);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    /* General comment */
+    .general-comment-area {
+      margin-top: 1.5rem;
+    }
+    .general-comment-area label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .general-comment-area textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+      background-color: #fff;
+    }
+
+    /* Buttons */
+    .btn {
+      cursor: pointer;
+      padding: 0.75rem 2rem;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      font-size: 1rem;
+      line-height: 1.25rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    .btn-secondary {
+      background-color: var(--secondary-button-background);
+      border: 1px solid var(--light-orange);
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background-color: var(--dark-orange);
+      color: white;
+    }
+    .submit-area {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    /* Post-submit */
+    .post-submit-container {
+      margin-top: 1.5rem;
+    }
+    .post-submit-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .post-submit-header h2 {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .post-submit-container pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      max-height: 500px;
+      overflow-y: auto;
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .copy-area {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    /* Confidence tags — matches Bridge status badge colors */
+    .confidence-tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+    }
+    .confidence-high { background: #dcfce7; color: #166534; }
+    .confidence-medium { background: #fef3c7; color: #92400e; }
+    .confidence-low { background: #fef2f2; color: #991b1b; }
+
+    /* Improvements list */
+    .improvements-list {
+      list-style: none;
+      padding: 0;
+    }
+    .improvements-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .improvements-list li:last-child { border-bottom: none; }
+    .improvement-title { font-weight: 600; }
+    .improvement-action {
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+      margin-top: 0.25rem;
+    }
+
+    /* Pre-ticket planning: read-only system goals + implementation order */
+    .planning-section { margin-bottom: 1rem; }
+    .goal-row { margin-bottom: 0.75rem; }
+    .goal-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
+    }
+    .goal-body {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      white-space: pre-wrap;
+    }
+    .nfr-list, .ac-list, .order-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 0.5rem;
+    }
+    .nfr-list li, .ac-list li, .order-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .nfr-list li:last-child, .ac-list li:last-child, .order-list li:last-child { border-bottom: none; }
+    .nfr-category, .ac-id { font-weight: 600; }
+    .nfr-implication, .ac-verification, .order-meta {
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+      margin-top: 0.25rem;
+    }
+    .order-title { font-weight: 600; }
+    .status-tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+    }
+    .status-confirmed { background: #dcfce7; color: #166534; }
+    .status-assumed { background: #fef3c7; color: #92400e; }
+    .status-open { background: #fef2f2; color: #991b1b; }
+
+    /* No decisions state */
+    .no-decisions-msg {
+      text-align: center;
+      padding: 2rem;
+      color: var(--success-color);
+      font-size: 1.2rem;
+    }
+
+    /* Focus style applied globally across all textareas */
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(226, 98, 75, 0.2);
+    }
+    /* display:block !important deliberately defeats the generic .hidden rule so
+       the max-height transition below can run; .hidden then collapses it. */
+    .nfr-feedback .comment-area, .ac-feedback .comment-area {
+      display: block !important;
+      overflow: hidden;
+      transition: max-height 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                  margin-top 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nfr-feedback .comment-area.hidden, .ac-feedback .comment-area.hidden {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+    .nfr-feedback .radio-group, .ac-feedback .radio-group {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-content { padding: 0 1rem; margin: 1.5rem auto; }
+      .container { padding: 1.5rem; }
+      .post-submit-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .nfr-feedback .radio-group, .ac-feedback .radio-group {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      
+      <span class="header-title">Bridge GPT</span>
+    </div>
+  </header>
+  <main class="main-content">
+    <div class="container">
+      <h1>Rally project setup: greenfield-rally-rails-run1</h1>
+      <p class="page-intro">These are the decisions that are expensive to change later. Pick an option for each, then submit once.</p>
+
+      <section class="planning-section" data-testid="system-goals">
+      <h2>System Goals &amp; Non-Functional Requirements</h2>
+      <div class="goal-row">
+        <div class="goal-label">Business goal</div>
+        <div class="goal-body" data-testid="system-goal-business">Ship Rally as a public, consumer-facing web application that anyone can sign up for and use from a browser, built and run by a solo developer or small team.</div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-label">Desired end-state</div>
+        <div class="goal-body" data-testid="system-goal-end-state">A single Rails 8.1 monolith (Hotwire + importmap + SQLite, Solid Queue/Cache/Cable) deployed with Kamal to a single server. Pages are fast, user data is isolated per account and never lost, and no secrets live in the repository.</div>
+      </div>
+      <div class="goal-row">
+        <div class="goal-label">System behavior</div>
+        <div class="goal-body" data-testid="system-goal-behavior">Server-rendered HTML with Turbo and Stimulus for interactivity; responsive on mobile browsers. Users own their own records; every request is scoped to the signed-in user. No native apps, no payments, no public API, no SPA framework.</div>
+      </div>
+          <div class="goal-label">Non-functional requirements</div>
+          <ul class="nfr-list">
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">architecture</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">Rails 8.1 monolith, Hotwire + importmap, no JS build step or SPA framework</div>
+              <div class="nfr-implication">Implication: New UI is ERB + Turbo Frames/Streams + Stimulus; no React/Vue/Node bundler</div>
+              <div class="nfr-feedback" data-nfr-id="architecture">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on architecture">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-0-architecture-agreed" name="nfr-stance-0-architecture" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-0-architecture-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-0-architecture-ask" name="nfr-stance-0-architecture" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-0-architecture-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-0-architecture-disagree" name="nfr-stance-0-architecture" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-0-architecture-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-0-architecture">Comment</label>
+                  <textarea id="nfr-comment-0-architecture" name="nfr-comment-0-architecture" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">database</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">SQLite in production with Solid Queue/Cache/Cable</div>
+              <div class="nfr-implication">Implication: Avoid Postgres-only SQL; mind write concurrency; jobs via Solid Queue</div>
+              <div class="nfr-feedback" data-nfr-id="database">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on database">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-1-database-agreed" name="nfr-stance-1-database" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-1-database-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-1-database-ask" name="nfr-stance-1-database" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-1-database-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-1-database-disagree" name="nfr-stance-1-database" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-1-database-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-1-database">Comment</label>
+                  <textarea id="nfr-comment-1-database" name="nfr-comment-1-database" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">deployment</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">Deploy with Kamal + Dockerfile to one server</div>
+              <div class="nfr-implication">Implication: Config via env/credentials; no multi-region assumptions</div>
+              <div class="nfr-feedback" data-nfr-id="deployment">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on deployment">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-2-deployment-agreed" name="nfr-stance-2-deployment" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-2-deployment-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-2-deployment-ask" name="nfr-stance-2-deployment" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-2-deployment-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-2-deployment-disagree" name="nfr-stance-2-deployment" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-2-deployment-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-2-deployment">Comment</label>
+                  <textarea id="nfr-comment-2-deployment" name="nfr-comment-2-deployment" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">performance</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">Fast pages</div>
+              <div class="nfr-implication">Implication: No N+1 queries; index foreign keys and filtered columns; paginate lists; cache expensive fragments</div>
+              <div class="nfr-feedback" data-nfr-id="performance">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on performance">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-3-performance-agreed" name="nfr-stance-3-performance" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-3-performance-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-3-performance-ask" name="nfr-stance-3-performance" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-3-performance-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-3-performance-disagree" name="nfr-stance-3-performance" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-3-performance-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-3-performance">Comment</label>
+                  <textarea id="nfr-comment-3-performance" name="nfr-comment-3-performance" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">testing</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">Minitest for models/controllers on every change; system tests for critical journeys</div>
+              <div class="nfr-implication">Implication: Each PR adds model + controller tests; sign-up, sign-in and core flows have Capybara system tests</div>
+              <div class="nfr-feedback" data-nfr-id="testing">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on testing">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-4-testing-agreed" name="nfr-stance-4-testing" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-4-testing-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-4-testing-ask" name="nfr-stance-4-testing" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-4-testing-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-4-testing-disagree" name="nfr-stance-4-testing" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-4-testing-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-4-testing">Comment</label>
+                  <textarea id="nfr-comment-4-testing" name="nfr-comment-4-testing" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">data isolation</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">One user never sees another user&#39;s private data</div>
+              <div class="nfr-implication">Implication: User-owned queries go through Current.user associations; authorization on every action</div>
+              <div class="nfr-feedback" data-nfr-id="data isolation">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on data isolation">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-5-data-isolation-agreed" name="nfr-stance-5-data-isolation" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-5-data-isolation-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-5-data-isolation-ask" name="nfr-stance-5-data-isolation" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-5-data-isolation-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-5-data-isolation-disagree" name="nfr-stance-5-data-isolation" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-5-data-isolation-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-5-data-isolation">Comment</label>
+                  <textarea id="nfr-comment-5-data-isolation" name="nfr-comment-5-data-isolation" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">secrets</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">No secrets in the repo</div>
+              <div class="nfr-implication">Implication: Encrypted Rails credentials / Kamal secrets only</div>
+              <div class="nfr-feedback" data-nfr-id="secrets">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on secrets">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-6-secrets-agreed" name="nfr-stance-6-secrets" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-6-secrets-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-6-secrets-ask" name="nfr-stance-6-secrets" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-6-secrets-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-6-secrets-disagree" name="nfr-stance-6-secrets" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-6-secrets-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-6-secrets">Comment</label>
+                  <textarea id="nfr-comment-6-secrets" name="nfr-comment-6-secrets" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">data safety</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">No data loss</div>
+              <div class="nfr-implication">Implication: Reversible, non-destructive migrations; a backup/restore path for SQLite</div>
+              <div class="nfr-feedback" data-nfr-id="data safety">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on data safety">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-7-data-safety-agreed" name="nfr-stance-7-data-safety" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-7-data-safety-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-7-data-safety-ask" name="nfr-stance-7-data-safety" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-7-data-safety-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-7-data-safety-disagree" name="nfr-stance-7-data-safety" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-7-data-safety-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-7-data-safety">Comment</label>
+                  <textarea id="nfr-comment-7-data-safety" name="nfr-comment-7-data-safety" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="confirmed">
+              <span class="nfr-category">scope</span><span class="status-tag status-confirmed">confirmed</span>
+              <div class="goal-body">No native apps, no payments in v1, no public API</div>
+              <div class="nfr-implication">Implication: No API-only controllers, payment gems, or mobile endpoints</div>
+              <div class="nfr-feedback" data-nfr-id="scope">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on scope">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-8-scope-agreed" name="nfr-stance-8-scope" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-8-scope-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-8-scope-ask" name="nfr-stance-8-scope" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-8-scope-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-8-scope-disagree" name="nfr-stance-8-scope" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-8-scope-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-8-scope">Comment</label>
+                  <textarea id="nfr-comment-8-scope" name="nfr-comment-8-scope" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="assumed">
+              <span class="nfr-category">ci</span><span class="status-tag status-assumed">assumed</span>
+              <div class="goal-body">Existing CI stays green</div>
+              <div class="nfr-implication">Implication: Brakeman, bundler-audit, importmap audit, RuboCop, tests and system tests must pass</div>
+              <div class="nfr-feedback" data-nfr-id="ci">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on ci">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-9-ci-agreed" name="nfr-stance-9-ci" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-9-ci-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-9-ci-ask" name="nfr-stance-9-ci" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-9-ci-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-9-ci-disagree" name="nfr-stance-9-ci" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-9-ci-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-9-ci">Comment</label>
+                  <textarea id="nfr-comment-9-ci" name="nfr-comment-9-ci" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="assumed">
+              <span class="nfr-category">responsiveness</span><span class="status-tag status-assumed">assumed</span>
+              <div class="goal-body">Responsive layout for mobile browsers</div>
+              <div class="nfr-implication">Implication: Mobile-first CSS; no fixed-width layouts</div>
+              <div class="nfr-feedback" data-nfr-id="responsiveness">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on responsiveness">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-10-responsiveness-agreed" name="nfr-stance-10-responsiveness" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-10-responsiveness-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-10-responsiveness-ask" name="nfr-stance-10-responsiveness" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-10-responsiveness-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-10-responsiveness-disagree" name="nfr-stance-10-responsiveness" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-10-responsiveness-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-10-responsiveness">Comment</label>
+                  <textarea id="nfr-comment-10-responsiveness" name="nfr-comment-10-responsiveness" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="open">
+              <span class="nfr-category">authentication</span><span class="status-tag status-open">open</span>
+              <div class="goal-body">Authentication approach for public sign-up</div>
+              <div class="nfr-implication">Implication: Shapes the user model, sessions, password reset and email delivery</div>
+              <div class="nfr-feedback" data-nfr-id="authentication">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on authentication">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-11-authentication-agreed" name="nfr-stance-11-authentication" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-11-authentication-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-11-authentication-ask" name="nfr-stance-11-authentication" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-11-authentication-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-11-authentication-disagree" name="nfr-stance-11-authentication" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-11-authentication-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-11-authentication">Comment</label>
+                  <textarea id="nfr-comment-11-authentication" name="nfr-comment-11-authentication" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="open">
+              <span class="nfr-category">backups</span><span class="status-tag status-open">open</span>
+              <div class="goal-body">SQLite backup strategy</div>
+              <div class="nfr-implication">Implication: How &#39;no data loss&#39; is guaranteed in production</div>
+              <div class="nfr-feedback" data-nfr-id="backups">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on backups">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-12-backups-agreed" name="nfr-stance-12-backups" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-12-backups-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-12-backups-ask" name="nfr-stance-12-backups" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-12-backups-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-12-backups-disagree" name="nfr-stance-12-backups" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-12-backups-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-12-backups">Comment</label>
+                  <textarea id="nfr-comment-12-backups" name="nfr-comment-12-backups" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="open">
+              <span class="nfr-category">accessibility</span><span class="status-tag status-open">open</span>
+              <div class="goal-body">Accessibility bar</div>
+              <div class="nfr-implication">Implication: Markup, form and contrast rules reviewers enforce</div>
+              <div class="nfr-feedback" data-nfr-id="accessibility">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on accessibility">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-13-accessibility-agreed" name="nfr-stance-13-accessibility" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-13-accessibility-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-13-accessibility-ask" name="nfr-stance-13-accessibility" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-13-accessibility-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-13-accessibility-disagree" name="nfr-stance-13-accessibility" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-13-accessibility-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-13-accessibility">Comment</label>
+                  <textarea id="nfr-comment-13-accessibility" name="nfr-comment-13-accessibility" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+            <li data-testid="system-goal-nfr" data-status="open">
+              <span class="nfr-category">styling</span><span class="status-tag status-open">open</span>
+              <div class="goal-body">Styling approach without a build step</div>
+              <div class="nfr-implication">Implication: CSS conventions and the style standard</div>
+              <div class="nfr-feedback" data-nfr-id="styling">
+                <div class="radio-group" role="radiogroup" aria-label="Stance on styling">
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-14-styling-agreed" name="nfr-stance-14-styling" value="agreed" checked data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-14-styling-agreed">Agreed</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-14-styling-ask" name="nfr-stance-14-styling" value="ask" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-14-styling-ask">Ask about this</label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="nfr-stance-14-styling-disagree" name="nfr-stance-14-styling" value="disagree" data-testid="nfr-stance-radio">
+                    <label for="nfr-stance-14-styling-disagree">Disagree</label>
+                  </div>
+                </div>
+                <div class="comment-area hidden">
+                  <label for="nfr-comment-14-styling">Comment</label>
+                  <textarea id="nfr-comment-14-styling" name="nfr-comment-14-styling" placeholder="Explain your question or concern..." data-testid="nfr-comment"></textarea>
+                </div>
+              </div>
+            </li>
+          </ul>
+      </section>
+
+      <div id="form-container">
+        <form id="decision-form">
+          <h2>Open questions about this project</h2>
+          <section class="card" data-item-id="auth" data-item-type="decision" data-source="" data-labels="[&quot;Rails 8 built-in authentication generator (has_secure_password + sessions), plus a hand-built sign-up&quot;,&quot;Devise&quot;,&quot;Passwordless magic links (email only)&quot;]" data-testid="decision-card" aria-labelledby="card-title-auth">
+            <h3 class="card-title" id="card-title-auth" data-testid="decision-card-title">How should users sign up and sign in?</h3>
+            <section class="card-section" data-testid="why-it-matters-section" aria-labelledby="why-it-matters-label-auth">
+              <div class="card-section-label" id="why-it-matters-label-auth">Why it matters</div>
+              <div class="card-section-body" data-testid="why-it-matters-body">The user model and session handling underpin data isolation and are expensive to swap later.</div>
+            </section>
+            <section class="radio-group" role="radiogroup" data-testid="decision-radio-group" aria-labelledby="radio-group-label-auth">
+              <div class="card-section-label" id="radio-group-label-auth">Choose an option</div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="0">
+                <div class="radio-option">
+                  <input type="radio" id="radio-auth-opt-0" name="radio-auth" value="opt-0" checked data-testid="decision-option">
+                  <label for="radio-auth-opt-0">Rails 8 built-in authentication generator (has_secure_password + sessions), plus a hand-built sign-up</label> <span class="ai-recommendation" data-testid="ai-recommendation-marker">(AI recommended)</span>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Minimal dependencies, code you own; you write sign-up, confirmation and rate limiting yourself.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="1">
+                <div class="radio-option">
+                  <input type="radio" id="radio-auth-opt-1" name="radio-auth" value="opt-1" data-testid="decision-option">
+                  <label for="radio-auth-opt-1">Devise</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Batteries included (confirmable, lockable), but a large dependency with its own conventions to follow.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="2">
+                <div class="radio-option">
+                  <input type="radio" id="radio-auth-opt-2" name="radio-auth" value="opt-2" data-testid="decision-option">
+                  <label for="radio-auth-opt-2">Passwordless magic links (email only)</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">No passwords to leak, but every sign-in depends on reliable email delivery.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="ask">
+                <div class="radio-option">
+                  <input type="radio" id="radio-auth-ask" name="radio-auth" value="ask" data-testid="decision-option">
+                  <label for="radio-auth-ask">Ask about this</label>
+                </div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="none">
+                <div class="radio-option">
+                  <input type="radio" id="radio-auth-none" name="radio-auth" value="none" data-testid="decision-option">
+                  <label for="radio-auth-none">None of these</label>
+                </div>
+              </div>
+            </section>
+            <section class="card-section" data-testid="recommendation-explanation-section" aria-labelledby="recommendation-label-auth">
+              <div class="card-section-label" id="recommendation-label-auth">Why the AI recommended this</div>
+              <div class="card-section-body" data-testid="recommendation-explanation-body">The Rails 8 generator fits a small team, keeps the stack default, and is easy to review.</div>
+            </section>
+            <div class="comment-area">
+              <label for="comment-auth">Comment</label>
+              <textarea id="comment-auth" name="comment-auth" placeholder="Required for None of these selections..." data-testid="decision-comment"></textarea>
+            </div>
+          </section>
+          <section class="card" data-item-id="backup" data-item-type="decision" data-source="" data-labels="[&quot;Litestream continuous replication to S3-compatible storage&quot;,&quot;Nightly snapshot of the Kamal volume&quot;,&quot;Decide later, before launch&quot;]" data-testid="decision-card" aria-labelledby="card-title-backup">
+            <h3 class="card-title" id="card-title-backup" data-testid="decision-card-title">How should the production SQLite database be protected against data loss?</h3>
+            <section class="card-section" data-testid="why-it-matters-section" aria-labelledby="why-it-matters-label-backup">
+              <div class="card-section-label" id="why-it-matters-label-backup">Why it matters</div>
+              <div class="card-section-body" data-testid="why-it-matters-body">You named data loss as something that must never happen, and SQLite lives on a single disk.</div>
+            </section>
+            <section class="radio-group" role="radiogroup" data-testid="decision-radio-group" aria-labelledby="radio-group-label-backup">
+              <div class="card-section-label" id="radio-group-label-backup">Choose an option</div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="0">
+                <div class="radio-option">
+                  <input type="radio" id="radio-backup-opt-0" name="radio-backup" value="opt-0" checked data-testid="decision-option">
+                  <label for="radio-backup-opt-0">Litestream continuous replication to S3-compatible storage</label> <span class="ai-recommendation" data-testid="ai-recommendation-marker">(AI recommended)</span>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Near-zero data loss window; adds one Kamal accessory to run.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="1">
+                <div class="radio-option">
+                  <input type="radio" id="radio-backup-opt-1" name="radio-backup" value="opt-1" data-testid="decision-option">
+                  <label for="radio-backup-opt-1">Nightly snapshot of the Kamal volume</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Simple, but up to a day of data can be lost.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="2">
+                <div class="radio-option">
+                  <input type="radio" id="radio-backup-opt-2" name="radio-backup" value="opt-2" data-testid="decision-option">
+                  <label for="radio-backup-opt-2">Decide later, before launch</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">No work now, but &#39;no data loss&#39; isn&#39;t guaranteed until it&#39;s decided.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="ask">
+                <div class="radio-option">
+                  <input type="radio" id="radio-backup-ask" name="radio-backup" value="ask" data-testid="decision-option">
+                  <label for="radio-backup-ask">Ask about this</label>
+                </div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="none">
+                <div class="radio-option">
+                  <input type="radio" id="radio-backup-none" name="radio-backup" value="none" data-testid="decision-option">
+                  <label for="radio-backup-none">None of these</label>
+                </div>
+              </div>
+            </section>
+            <section class="card-section" data-testid="recommendation-explanation-section" aria-labelledby="recommendation-label-backup">
+              <div class="card-section-label" id="recommendation-label-backup">Why the AI recommended this</div>
+              <div class="card-section-body" data-testid="recommendation-explanation-body">Litestream is the standard way to make single-server SQLite durable.</div>
+            </section>
+            <div class="comment-area">
+              <label for="comment-backup">Comment</label>
+              <textarea id="comment-backup" name="comment-backup" placeholder="Required for None of these selections..." data-testid="decision-comment"></textarea>
+            </div>
+          </section>
+          <section class="card" data-item-id="a11y" data-item-type="decision" data-source="" data-labels="[&quot;WCAG 2.2 AA basics: semantic HTML, labelled forms, keyboard access, AA contrast&quot;,&quot;Best effort, no formal bar&quot;,&quot;Full WCAG 2.2 AA with automated axe checks in system tests&quot;]" data-testid="decision-card" aria-labelledby="card-title-a11y">
+            <h3 class="card-title" id="card-title-a11y" data-testid="decision-card-title">What accessibility bar should a public app meet?</h3>
+            <section class="card-section" data-testid="why-it-matters-section" aria-labelledby="why-it-matters-label-a11y">
+              <div class="card-section-label" id="why-it-matters-label-a11y">Why it matters</div>
+              <div class="card-section-body" data-testid="why-it-matters-body">Public consumer apps are expected to be usable by everyone, and markup conventions are hard to retrofit.</div>
+            </section>
+            <section class="radio-group" role="radiogroup" data-testid="decision-radio-group" aria-labelledby="radio-group-label-a11y">
+              <div class="card-section-label" id="radio-group-label-a11y">Choose an option</div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="0">
+                <div class="radio-option">
+                  <input type="radio" id="radio-a11y-opt-0" name="radio-a11y" value="opt-0" checked data-testid="decision-option">
+                  <label for="radio-a11y-opt-0">WCAG 2.2 AA basics: semantic HTML, labelled forms, keyboard access, AA contrast</label> <span class="ai-recommendation" data-testid="ai-recommendation-marker">(AI recommended)</span>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Reviewers enforce a short checklist; low cost if adopted from day one.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="1">
+                <div class="radio-option">
+                  <input type="radio" id="radio-a11y-opt-1" name="radio-a11y" value="opt-1" data-testid="decision-option">
+                  <label for="radio-a11y-opt-1">Best effort, no formal bar</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Cheapest now; retrofitting later is costly.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="2">
+                <div class="radio-option">
+                  <input type="radio" id="radio-a11y-opt-2" name="radio-a11y" value="opt-2" data-testid="decision-option">
+                  <label for="radio-a11y-opt-2">Full WCAG 2.2 AA with automated axe checks in system tests</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Strongest guarantee; adds a test dependency and slower system tests.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="ask">
+                <div class="radio-option">
+                  <input type="radio" id="radio-a11y-ask" name="radio-a11y" value="ask" data-testid="decision-option">
+                  <label for="radio-a11y-ask">Ask about this</label>
+                </div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="none">
+                <div class="radio-option">
+                  <input type="radio" id="radio-a11y-none" name="radio-a11y" value="none" data-testid="decision-option">
+                  <label for="radio-a11y-none">None of these</label>
+                </div>
+              </div>
+            </section>
+            <section class="card-section" data-testid="recommendation-explanation-section" aria-labelledby="recommendation-label-a11y">
+              <div class="card-section-label" id="recommendation-label-a11y">Why the AI recommended this</div>
+              <div class="card-section-body" data-testid="recommendation-explanation-body">AA basics give most of the benefit for little effort on a small team.</div>
+            </section>
+            <div class="comment-area">
+              <label for="comment-a11y">Comment</label>
+              <textarea id="comment-a11y" name="comment-a11y" placeholder="Required for None of these selections..." data-testid="decision-comment"></textarea>
+            </div>
+          </section>
+          <section class="card" data-item-id="styling" data-item-type="decision" data-source="" data-labels="[&quot;Plain modern CSS with custom properties (Propshaft, no build)&quot;,&quot;tailwindcss-rails (standalone CLI, no Node)&quot;,&quot;Classless/minimal CSS framework (e.g. Pico) plus small overrides&quot;]" data-testid="decision-card" aria-labelledby="card-title-styling">
+            <h3 class="card-title" id="card-title-styling" data-testid="decision-card-title">How should Rally be styled, given the no-build-step stack?</h3>
+            <section class="card-section" data-testid="why-it-matters-section" aria-labelledby="why-it-matters-label-styling">
+              <div class="card-section-label" id="why-it-matters-label-styling">Why it matters</div>
+              <div class="card-section-body" data-testid="why-it-matters-body">It sets the style standard and how every view is written.</div>
+            </section>
+            <section class="radio-group" role="radiogroup" data-testid="decision-radio-group" aria-labelledby="radio-group-label-styling">
+              <div class="card-section-label" id="radio-group-label-styling">Choose an option</div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="0">
+                <div class="radio-option">
+                  <input type="radio" id="radio-styling-opt-0" name="radio-styling" value="opt-0" checked data-testid="decision-option">
+                  <label for="radio-styling-opt-0">Plain modern CSS with custom properties (Propshaft, no build)</label> <span class="ai-recommendation" data-testid="ai-recommendation-marker">(AI recommended)</span>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Zero tooling; you maintain your own design tokens and components.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="1">
+                <div class="radio-option">
+                  <input type="radio" id="radio-styling-opt-1" name="radio-styling" value="opt-1" data-testid="decision-option">
+                  <label for="radio-styling-opt-1">tailwindcss-rails (standalone CLI, no Node)</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Fast utility-class styling; adds a watcher process and class-heavy markup.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="2">
+                <div class="radio-option">
+                  <input type="radio" id="radio-styling-opt-2" name="radio-styling" value="opt-2" data-testid="decision-option">
+                  <label for="radio-styling-opt-2">Classless/minimal CSS framework (e.g. Pico) plus small overrides</label>
+                </div>
+                <div class="radio-option-consequence" data-testid="option-consequence">Instant decent look; less control over the visual identity.</div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="ask">
+                <div class="radio-option">
+                  <input type="radio" id="radio-styling-ask" name="radio-styling" value="ask" data-testid="decision-option">
+                  <label for="radio-styling-ask">Ask about this</label>
+                </div>
+              </div>
+              <div class="radio-option-wrapper" data-testid="option-wrapper" data-option-index="none">
+                <div class="radio-option">
+                  <input type="radio" id="radio-styling-none" name="radio-styling" value="none" data-testid="decision-option">
+                  <label for="radio-styling-none">None of these</label>
+                </div>
+              </div>
+            </section>
+            <section class="card-section" data-testid="recommendation-explanation-section" aria-labelledby="recommendation-label-styling">
+              <div class="card-section-label" id="recommendation-label-styling">Why the AI recommended this</div>
+              <div class="card-section-body" data-testid="recommendation-explanation-body">Plain CSS with tokens matches the current Propshaft setup and keeps pages light.</div>
+            </section>
+            <div class="comment-area">
+              <label for="comment-styling">Comment</label>
+              <textarea id="comment-styling" name="comment-styling" placeholder="Required for None of these selections..." data-testid="decision-comment"></textarea>
+            </div>
+          </section>
+          <div class="general-comment-area">
+            <label for="general-comment">General Comment (optional)</label>
+            <textarea id="general-comment" name="general_comment" placeholder="Any overall feedback or guidance..." data-testid="general-comment"></textarea>
+          </div>
+
+          <div class="submit-area">
+            <button type="button" id="submit-btn" class="btn btn-primary" data-testid="submit-decisions">Submit Decisions</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="post-submit-container" class="post-submit-container hidden">
+        <div class="post-submit-header">
+          <h2>Output JSON</h2>
+          <button type="button" class="btn btn-secondary" data-copy-json-btn data-default-label="Copy JSON">Copy JSON</button>
+        </div>
+        <p>Copy the JSON below and paste it back to the agent.</p>
+        <pre id="json-output" data-testid="decision-output-json"></pre>
+        <div class="copy-area">
+          <button type="button" id="copy-btn" class="btn btn-secondary" data-copy-json-btn data-default-label="Copy to Clipboard">Copy to Clipboard</button>
+        </div>
+      </div>
+
+
+
+    </div>
+  </main>
+  <script>
+    (function() {
+      var submitBtn;
+      var copyButtons;
+      var formContainer;
+      var postSubmitContainer;
+      var jsonOutput;
+
+      function init() {
+        submitBtn = document.getElementById("submit-btn");
+        copyButtons = Array.prototype.slice.call(document.querySelectorAll("[data-copy-json-btn]"));
+        formContainer = document.getElementById("form-container");
+        postSubmitContainer = document.getElementById("post-submit-container");
+        jsonOutput = document.getElementById("json-output");
+
+        // Stance radio disclosure (planning mode only). Acceptance criteria and
+        // NFRs behave identically here, so they share one listener set; only the
+        // capture step below distinguishes them, since their JSON keys differ.
+        var stanceContainers = document.querySelectorAll(".nfr-feedback, .ac-feedback");
+        stanceContainers.forEach(function(container) {
+          var radios = container.querySelectorAll('input[type="radio"]');
+          radios.forEach(function(radio) {
+            radio.addEventListener("change", function() {
+              var commentArea = container.querySelector(".comment-area");
+              var textarea = commentArea ? commentArea.querySelector("textarea") : null;
+              if (radio.value === "ask" || radio.value === "disagree") {
+                commentArea.classList.remove("hidden");
+              } else {
+                commentArea.classList.add("hidden");
+                if (textarea) {
+                  textarea.value = "";
+                  textarea.classList.remove("validation-error");
+                  var existingMsg = commentArea.querySelector(".validation-msg");
+                  if (existingMsg) existingMsg.remove();
+                }
+              }
+            });
+          });
+        });
+
+        submitBtn.addEventListener("click", function() {
+          var cards = document.querySelectorAll(".card[data-item-id]");
+          var valid = true;
+
+          // Validate: every card must have a selection, and "None of these" requires a comment.
+          cards.forEach(function(card) {
+            var itemId = card.getAttribute("data-item-id");
+            var selected = card.querySelector('input[type="radio"]:checked');
+            var textarea = document.getElementById("comment-" + itemId);
+            var existingMsg = card.querySelector(".validation-msg");
+            if (existingMsg) existingMsg.remove();
+            textarea.classList.remove("validation-error");
+
+            if (!selected) {
+              var radioGroup = card.querySelector(".radio-group");
+              var msg = document.createElement("div");
+              msg.className = "validation-msg";
+              msg.textContent = "Please select an option.";
+              radioGroup.appendChild(msg);
+              valid = false;
+              return;
+            }
+
+            if (selected.value === "none" && !textarea.value.trim()) {
+              textarea.classList.add("validation-error");
+              var msg = document.createElement("div");
+              msg.className = "validation-msg";
+              msg.textContent = "A comment is required when selecting None of these.";
+              textarea.parentNode.appendChild(msg);
+              valid = false;
+            }
+          });
+
+          // Validate stance feedback: ask/disagree requires a comment.
+          stanceContainers.forEach(function(container) {
+            var selected = container.querySelector('input[type="radio"]:checked');
+            if (!selected) return;
+            if (selected.value === "ask" || selected.value === "disagree") {
+              var commentArea = container.querySelector(".comment-area");
+              var textarea = commentArea ? commentArea.querySelector("textarea") : null;
+              var existingMsg = commentArea ? commentArea.querySelector(".validation-msg") : null;
+              if (existingMsg) existingMsg.remove();
+              if (textarea) textarea.classList.remove("validation-error");
+              if (!textarea || !textarea.value.trim()) {
+                if (textarea) textarea.classList.add("validation-error");
+                var msg = document.createElement("div");
+                msg.className = "validation-msg";
+                msg.textContent = "A comment is required.";
+                if (commentArea) commentArea.appendChild(msg);
+                valid = false;
+              }
+            }
+          });
+
+          if (!valid) return;
+
+          // Build output JSON
+          var decisions = {};
+          cards.forEach(function(card) {
+            var itemId = card.getAttribute("data-item-id");
+            var selected = card.querySelector('input[type="radio"]:checked');
+            var textarea = document.getElementById("comment-" + itemId);
+            var source = card.getAttribute("data-source") || "";
+            var labels = JSON.parse(card.getAttribute("data-labels") || "[]");
+            var chosenLabel = "";
+            if (selected.value === "none") {
+              chosenLabel = "None of these";
+            } else if (selected.value === "ask") {
+              chosenLabel = "Ask about this";
+            } else {
+              var idx = parseInt(selected.value.replace("opt-", ""), 10);
+              chosenLabel = labels[idx] || "";
+            }
+            decisions[itemId] = {
+              choice: selected.value,
+              chosen_label: chosenLabel,
+              comment: textarea ? textarea.value : "",
+              source: source
+            };
+          });
+
+          // Capture stances. Acceptance criteria and NFRs land in separate maps
+          // because their keys differ: AC are keyed by id, NFRs by category.
+          function captureStances(selector, idAttr) {
+            var out = {};
+            document.querySelectorAll(selector).forEach(function(container) {
+              var key = container.getAttribute(idAttr);
+              var selected = container.querySelector('input[type="radio"]:checked');
+              var commentArea = container.querySelector(".comment-area");
+              var textarea = commentArea ? commentArea.querySelector("textarea") : null;
+              out[key] = {
+                stance: selected ? selected.value : "agreed",
+                comment: textarea ? textarea.value : ""
+              };
+            });
+            return out;
+          }
+          var acceptanceCriteriaFeedback = captureStances(".ac-feedback", "data-ac-id");
+          var nfrFeedback = captureStances(".nfr-feedback", "data-nfr-id");
+
+          var output = {
+            ticket_key: "greenfield-rally-rails-run1",
+            decisions: decisions,
+            acceptance_criteria_feedback: acceptanceCriteriaFeedback,
+            nfr_feedback: nfrFeedback,
+            general_comment: document.getElementById("general-comment").value
+          };
+
+          jsonOutput.textContent = JSON.stringify(output, null, 2);
+          formContainer.classList.add("hidden");
+          postSubmitContainer.classList.remove("hidden");
+        });
+
+        copyButtons.forEach(function(copyBtn) {
+          copyBtn.addEventListener("click", function() {
+            copyJson();
+          });
+        });
+      }
+
+      function copyJson() {
+        var text = jsonOutput.textContent;
+        try {
+          navigator.clipboard.writeText(text).then(function() {
+            setCopyButtonLabel("Copied!");
+            setTimeout(resetCopyButtonLabels, 2000);
+          }).catch(function() {
+            selectAndPrompt();
+          });
+        } catch (e) {
+          selectAndPrompt();
+        }
+      }
+
+      function setCopyButtonLabel(label) {
+        copyButtons.forEach(function(button) {
+          button.textContent = label;
+        });
+      }
+
+      function resetCopyButtonLabels() {
+        copyButtons.forEach(function(button) {
+          button.textContent = button.getAttribute("data-default-label") || "Copy JSON";
+        });
+      }
+
+      function selectAndPrompt() {
+        var range = document.createRange();
+        range.selectNodeContents(jsonOutput);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        setCopyButtonLabel("Auto-copy unavailable. Press Ctrl+C / Cmd+C to copy.");
+      }
+
+      if (document.readyState !== "loading") {
+        init();
+      } else {
+        document.addEventListener("DOMContentLoaded", init);
+      }
+    })();
+  </script>
+</body>
+</html>

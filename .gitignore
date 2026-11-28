@@ -33,3 +33,7 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+.mcp.json
+.bridge/install-state.json
+.bridge/bridge-permissions.json
+.claude/settings.local.json
